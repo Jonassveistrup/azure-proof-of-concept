@@ -1,0 +1,424 @@
+{
+  "ApplicationName": "Dfakturering",
+  "DisplayName": "D-Fakturering",
+  "Description": "A simple application to send request and get response",
+  "ApplicationRoles": [
+    {
+      "Name": "Invoicer",
+      "Description": "The person creating the invoice,"
+    },
+    {
+      "Name": "Receiver",
+      "Description": "The person receiving the invoice."
+    },
+    {
+      "Name": "Auditor",
+      "Description": "The person auditing the invoice"
+    }
+  ],
+  "Workflows": [
+    {
+      "Name": "Dfakturering", 
+      "DisplayName": "Create an invoice",
+      "Description": "The creation of an invoice.",
+      "Initiators": [ "Invoicer" ],
+      "StartState": "Created",
+      "Properties": [
+        {
+          "Name": "State",
+          "DisplayName": "State",
+          "Description": "Holds the state of the contract.",
+          "Type": {
+            "Name": "state"
+          }
+        },
+        {
+          "Name": "Invoicer",
+          "DisplayName": "Invoicer",
+          "Description": "The creator of the invoice",
+          "Type": {
+            "Name": "Invoicer"
+          }
+        },
+        {
+          "Name": "Receiver",
+          "DisplayName": "Receiver",
+          "Description": "The receiver of the invoice",
+          "Type":{
+            "Name": "Receiver"
+          }
+        },
+        {
+          "Name": "Auditor",
+          "DisplayName": "Auditor",
+          "Description": "The auditor of the invoice",
+          "Type":{
+            "Name": "Auditor"
+          }
+        },
+        {
+          "Name": "Price",
+          "DisplayName": "Price",
+          "Description": "The price of the invoice",
+          "Type":{
+            "Name": "uint"
+          }
+        },
+        {
+          "Name": "VAT",
+          "DisplayName": "VAT", 
+          "Description": "The vat of the invoice",
+          "Type":{
+            "Name": "uint"
+          }
+        }, 
+        {
+          "Name": "newPrice",
+          "DisplayName": "newPrice",
+          "Description": "The suggested new price of the invoice",
+          "Type": {
+            "Name": "uint"
+          }
+        },
+        {
+          "Name": "newVAT", 
+          "DisplayName": "newVAT",
+          "Description": "The suggested new VAT of the invoice",
+          "Type":{
+            "Name": "uint"
+          }
+        },
+        {
+          "Name": "Negotiater",
+          "DisplayName": "Negotiater",
+          "Description": "The one suggesting new information of the invoice",
+          "Type": {
+            "Name": "address"
+          }
+        }
+      ],
+      "Constructor": {
+        "Parameters": [
+          {
+            "Name": "_receiver",
+            "DisplayName": "Receiver",
+            "Type":{
+              "Name": "Receiver"
+            }
+          },
+          {
+            "Name": "_auditor",
+            "DisplayName": "Auditor",
+            "Type": {
+              "Name": "Auditor"
+            }
+          },
+          {
+            "Name": "_price",
+            "DisplayName": "Price no VAT", 
+            "Type":{
+              "Name": "uint"
+            }
+          },
+          {
+            "Name": "_vat",
+            "DisplayName": "VAT",
+            "Type":{
+              "Name": "uint"
+            }
+          }
+        ]
+      },
+      "Functions": [
+        {
+          "Name": "Review",
+          "DisplayName": "Review",
+          "Description": "Review the invoice",
+          "Parameters": [
+            {
+              "Name": "passed",
+              "DisplayName": "passed",
+              "Type":{
+                "Name": "bool"
+              }
+            }
+          ]
+        },
+        {
+          "Name": "Negotiate",
+          "DisplayName": "Negotiate",
+          "Description": "Suggest new price and VAT of an invoice",
+          "Parameters": [
+            {
+              "Name": "_price",
+              "DisplayName": "Price",
+              "Type":{
+                "Name": "uint"
+              }
+            },
+            {
+              "Name": "_vat",
+              "DisplayName": "VAT",
+              "Type":{
+                "Name": "uint"
+              }
+            }
+          ]
+        },
+        {
+          "Name": "AcceptNegotiation",
+          "DisplayName": "AcceptNegotiation",
+          "Description": "Accept the suggested values",
+          "Parameters": []
+        },
+        {
+          "Name": "RequestNegotiationEnd",
+          "DisplayName": "RequestNegotiationEnd",
+          "Description": "Request that the invoice is finalized",
+          "Parameters": []
+        },
+        {
+          "Name": "AcceptNegotiationEnd",
+          "DisplayName": "AcceptNegotiationEnd",
+          "Description": "Accept the finalize request",
+          "Parameters": []
+        },
+        {
+          "Name": "SendPayment",
+          "DisplayName": "SendPayment",
+          "Description": "Tell the invoicer that you have sent the money",
+          "Parameters": []
+        },
+        {
+          "Name": "AcceptPayment",
+          "DisplayName": "AcceptPayment",
+          "Description": "Accept the receivers money",
+          "Parameters": []
+        },
+        {
+          "Name": "CancelDeal",
+          "DisplayName": "CancelDeal",
+          "Description": "Reject the invoice",
+          "Parameters": []
+        }
+      ],
+      "States": [
+        {
+          "Name": "Created",
+          "DisplayName": "Created", 
+          "Description": "The invoice was just created",
+          "PercentComplete": 0,
+          "Value": 0,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal", 
+              "NextStates": ["Cancelled"],
+              "DisplayName": "Reject the invoice"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Negotiate the deal",
+              "Function": "Negotiate",
+              "NextStates": ["IsNegotiating"],
+              "DisplayName": "Negotiate"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "The Receiver send funds to the the invoicer",
+              "Function": "SendPayment",
+              "NextStates": ["Paid"],
+              "DisplayName": "SendPayment"
+            }
+          ]
+        },
+        {
+          "Name": "CanBeNegotiated",
+          "DisplayName": "CanBeNegotiated",
+          "Description": "The invoice can be negotiated",
+          "PercentComplete": 10,
+          "Value": 1,
+          "Style": "Success",
+          "Transitions":[
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Negotiate",
+              "Function": "Negotiate",
+              "NextStates": ["IsNegotiating"],
+              "DisplayName": "Negotiate"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal", 
+              "NextStates": ["Cancelled"],
+              "DisplayName": "Reject the invoice"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "RequestNegotiationEnd",
+              "Function": "RequestNegotiationEnd",
+              "NextStates": ["RequestNegotiationEnd"],
+              "DisplayName": "RequestNegotiationEnd"
+            }
+          ]
+        },
+        {
+          "Name": "IsNegotiating", 
+          "DisplayName": "IsNegotiating",
+          "Description": "The invoice is in negotiation",
+          "PercentComplete": 10,
+          "Value": 2,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "AcceptNegotiation",
+              "Function": "AcceptNegotiation",
+              "NextStates": ["CanBeNegotiated"],
+              "DisplayName": "AcceptNegotiation"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Negotiate",
+              "Function": "Negotiate",
+              "NextStates": ["IsNegotiating"],
+              "DisplayName": "Negotiate"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal", 
+              "NextStates": ["Cancelled"],
+              "DisplayName": "Reject the invoice"
+            }
+          ]
+        },
+        {
+          "Name": "NegotiationEndRequested",
+          "DisplayName": "NegotiationEndRequested",
+          "Description": "NegotiationEndRequested",
+          "PercentComplete": 25,
+          "Value": 3,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal", 
+              "NextStates": ["Cancelled"],
+              "DisplayName": "Reject the invoice"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "AcceptNegotiationEnd", 
+              "Function": "AcceptNegotiationEnd",
+              "NextStates": ["NegotiationFinished"]
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Negotiate",
+              "Function": "Negotiate",
+              "NextStates": ["IsNegotiating"],
+              "DisplayName": "Negotiate"
+            }
+          ]
+        },
+        {
+          "Name": "NegotiationFinished",
+          "DisplayName": "NegotiationFinished",
+          "Description": "The negotiation stage of the invoice is finished",
+          "PercentComplete": 50,
+          "Value": 4,
+          "Style": "Success", 
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal", 
+              "NextStates": ["Cancelled"],
+              "DisplayName": "Reject the invoice"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["Receiver"],
+              "Description": "The Receiver send funds to the the invoicer",
+              "Function": "SendPayment",
+              "NextStates": ["Paid"],
+              "DisplayName": "SendPayment"
+            }
+          ]
+        },
+        {
+          "Name": "PaymentSent", 
+          "DisplayName": "PaymentSent",
+          "Description": "The receiver has send funds to the invoicer",
+          "PercentComplete": 75,
+          "Value": 5,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles":["Invoicer"],
+              "Description": "The invoice accepts to have received the funds",
+              "Function": "AcceptPayment",
+              "NextStates": ["Paid"],
+              "DisplayName": "AcceptPayment"
+            }
+          ]
+        },
+        {
+          "Name": "Paid",
+          "DisplayName": "Paid",
+          "Description": "The invoicer accepts to have received the funds.",
+          "PercentComplete": 80,
+          "Value": 6,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles":[],
+              "AllowedInstanceRoles":["Auditor"],
+              "Description": "The auditor reviews the invoice",
+              "Function": "Review",
+              "NextStates": ["Passed", "Failed"],
+              "DisplayName": "Review"
+            }
+          ]          
+        },
+        {
+          "Name": "Cancelled",
+          "DisplayName": "Cancelled",
+          "Description": "The deal is cancelled",
+          "PercentComplete": 100,
+          "Value": 7,
+          "Style": "Failure",
+          "Transitions": []
+        },
+        {
+          "Name": "Failed", 
+          "DisplayName": "Failed",
+          "Description": "The invoice is found insufficient by the auditor",
+          "PercentComplete": 100,
+          "Value": 8,
+          "Style": "Failure",
+          "Transitions":[]
+        }
+      ]
+    }
+  ]
+}

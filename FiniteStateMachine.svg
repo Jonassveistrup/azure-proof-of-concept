@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="800" height="600" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="151.5" cy="78.5" rx="30" ry="30"/>
+	<text x="120.5" y="84.5" font-family="Times New Roman" font-size="20">Created</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="151.5" cy="252.5" rx="30" ry="30"/>
+	<text x="98.5" y="258.5" font-family="Times New Roman" font-size="20">PaymentSent</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="151.5" cy="396.5" rx="30" ry="30"/>
+	<text x="133.5" y="402.5" font-family="Times New Roman" font-size="20">Paid</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="100.5" cy="519.5" rx="30" ry="30"/>
+	<text x="75.5" y="525.5" font-family="Times New Roman" font-size="20">Failed</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="100.5" cy="519.5" rx="24" ry="24"/>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="218.5" cy="519.5" rx="30" ry="30"/>
+	<text x="191.5" y="525.5" font-family="Times New Roman" font-size="20">Passed</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="218.5" cy="519.5" rx="24" ry="24"/>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="639.5" cy="78.5" rx="30" ry="30"/>
+	<text x="585.5" y="84.5" font-family="Times New Roman" font-size="20">IsNegotiating</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="530.5" cy="198.5" rx="30" ry="30"/>
+	<text x="475.5" y="204.5" font-family="Times New Roman" font-size="20">CanNegotiate</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="291.5" cy="198.5" rx="30" ry="30"/>
+	<text x="251.5" y="204.5" font-family="Times New Roman" font-size="20">Cancelled</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="291.5" cy="198.5" rx="24" ry="24"/>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="639.5" cy="344.5" rx="30" ry="30"/>
+	<text x="534.5" y="350.5" font-family="Times New Roman" font-size="20">NegotiationEndRequested</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="639.5" cy="519.5" rx="30" ry="30"/>
+	<text x="557.5" y="525.5" font-family="Times New Roman" font-size="20">NegotiationFinished</text>
+	<polygon stroke="black" stroke-width="1" points="151.5,108.5 151.5,222.5"/>
+	<polygon fill="black" stroke-width="1" points="151.5,222.5 156.5,214.5 146.5,214.5"/>
+	<polygon stroke="black" stroke-width="1" points="151.5,282.5 151.5,366.5"/>
+	<polygon fill="black" stroke-width="1" points="151.5,366.5 156.5,358.5 146.5,358.5"/>
+	<polygon stroke="black" stroke-width="1" points="140.01,424.212 111.99,491.788"/>
+	<polygon fill="black" stroke-width="1" points="111.99,491.788 119.673,486.313 110.436,482.483"/>
+	<polygon stroke="black" stroke-width="1" points="165.851,422.845 204.149,493.155"/>
+	<polygon fill="black" stroke-width="1" points="204.149,493.155 204.713,483.738 195.932,488.521"/>
+	<polygon stroke="black" stroke-width="1" points="181.5,78.5 609.5,78.5"/>
+	<polygon fill="black" stroke-width="1" points="609.5,78.5 601.5,73.5 601.5,83.5"/>
+	<polygon stroke="black" stroke-width="1" points="619.329,100.707 550.671,176.293"/>
+	<polygon fill="black" stroke-width="1" points="550.671,176.293 559.751,173.734 552.349,167.01"/>
+	<polygon stroke="black" stroke-width="1" points="550.671,176.293 619.329,100.707"/>
+	<polygon fill="black" stroke-width="1" points="619.329,100.707 610.249,103.266 617.651,109.99"/>
+	<polygon stroke="black" stroke-width="1" points="174.278,98.024 268.722,178.976"/>
+	<polygon fill="black" stroke-width="1" points="268.722,178.976 265.902,169.974 259.394,177.566"/>
+	<polygon stroke="black" stroke-width="1" points="611.139,88.28 319.861,188.72"/>
+	<polygon fill="black" stroke-width="1" points="319.861,188.72 329.054,190.839 325.794,181.385"/>
+	<polygon stroke="black" stroke-width="1" points="500.5,198.5 321.5,198.5"/>
+	<polygon fill="black" stroke-width="1" points="321.5,198.5 329.5,203.5 329.5,193.5"/>
+	<polygon stroke="black" stroke-width="1" points="548.447,222.539 621.553,320.461"/>
+	<polygon fill="black" stroke-width="1" points="621.553,320.461 620.773,311.059 612.76,317.041"/>
+	<polygon stroke="black" stroke-width="1" points="639.5,374.5 639.5,489.5"/>
+	<polygon fill="black" stroke-width="1" points="639.5,489.5 644.5,481.5 634.5,481.5"/>
+	<polygon stroke="black" stroke-width="1" points="613.182,505.1 177.818,266.9"/>
+	<polygon fill="black" stroke-width="1" points="177.818,266.9 182.437,275.126 187.236,266.353"/>
+	<polygon stroke="black" stroke-width="1" points="611.836,332.894 319.164,210.106"/>
+	<polygon fill="black" stroke-width="1" points="319.164,210.106 324.607,217.812 328.475,208.59"/>
+	<polygon stroke="black" stroke-width="1" points="639.5,314.5 639.5,108.5"/>
+	<polygon fill="black" stroke-width="1" points="639.5,108.5 634.5,116.5 644.5,116.5"/>
+</svg>
