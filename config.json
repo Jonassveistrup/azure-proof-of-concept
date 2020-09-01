@@ -1,6 +1,6 @@
 {
-  "ApplicationName": "Dfakturering",
-  "DisplayName": "D-Fakturering",
+  "ApplicationName": "Dfakturering_v14",
+  "DisplayName": "D-Fakturering_v14",
   "Description": "A simple application to send request and get response",
   "ApplicationRoles": [
     {
@@ -12,411 +12,492 @@
       "Description": "The person receiving the invoice."
     },
     {
+      "Name": "ReceiverBank",
+      "Description": "The bank of the person receiving the invoice."
+    },
+    {
       "Name": "Auditor",
       "Description": "The person auditing the invoice"
     }
   ],
   "Workflows": [
     {
-      "Name": "Dfakturering", 
-      "DisplayName": "Create an invoice",
-      "Description": "The creation of an invoice.",
-      "Initiators": [ "Invoicer" ],
+      "Name": "Dfakturering_v14",
+      "DisplayName": "Opret en faktura",
+      "Description": "Oprettelse af en faktura",
+      "Initiators": [
+        "Invoicer"
+      ],
       "StartState": "Created",
       "Properties": [
         {
           "Name": "State",
           "DisplayName": "State",
-          "Description": "Holds the state of the contract.",
+          "Description": "Angiver hvilken status faktuaren har.",
           "Type": {
             "Name": "state"
           }
         },
         {
+          "Name": "Comment",
+          "DisplayName": "Kommentar",
+          "Description": "En kommentar der er tilknyttet fakturaen",
+          "Type": {
+            "Name": "string"
+          }
+        },
+        {
+          "Name": "Price",
+          "DisplayName": "Pris",
+          "Description": "Fakturaen samlede pris",
+          "Type": {
+            "Name": "money"
+          }
+        },
+        {
+          "Name": "VAT",
+          "DisplayName": "Moms",
+          "Description": "Fakturaens moms-beløb",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "FilePath",
+          "DisplayName": "Filsti",
+          "Description": "The filepath of the invoice document",
+          "Type": {
+            "Name": "string"
+          }
+        },
+        {
+          "Name": "FileHash",
+          "DisplayName": "Digitalt fingeraftryk",
+          "Description": "The hash of the invoice document, acting as a fingerprint",
+          "Type": {
+            "Name": "string"
+          }
+        },
+        {
+          "Name": "NewPrice",
+          "DisplayName": "Ny pris",
+          "Description": "Foreslået ny pris",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "NewVAT",
+          "DisplayName": "Ny moms",
+          "Description": "Foreslået ny moms på fakturaen",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "NewFilePath",
+          "DisplayName": "Ny filsti",
+          "Description": "The filepath of the invoice document",
+          "Type": {
+            "Name": "string"
+          }
+        },
+        {
+          "Name": "Negotiator",
+          "DisplayName": "Forhandler",
+          "Description": "The one suggesting new information of the invoice",
+          "Type": {
+            "Name": "address"
+          }
+        },
+        {
           "Name": "Invoicer",
-          "DisplayName": "Invoicer",
-          "Description": "The creator of the invoice",
+          "DisplayName": "Afsender",
+          "Description": "Afsenderen af fakturaen",
           "Type": {
             "Name": "Invoicer"
           }
         },
         {
           "Name": "Receiver",
-          "DisplayName": "Receiver",
-          "Description": "The receiver of the invoice",
-          "Type":{
+          "DisplayName": "Modtager",
+          "Description": "Modtageren af fakturaen",
+          "Type": {
             "Name": "Receiver"
           }
         },
         {
+          "Name": "ReceiverBank",
+          "DisplayName": "Modtagers bank",
+          "Description": "Modtagerens bank",
+          "Type": {
+            "Name": "ReceiverBank"
+          }
+        },
+        {
           "Name": "Auditor",
-          "DisplayName": "Auditor",
-          "Description": "The auditor of the invoice",
-          "Type":{
+          "DisplayName": "Revisor",
+          "Description": "Revisor af fakturaen",
+          "Type": {
             "Name": "Auditor"
-          }
-        },
-        {
-          "Name": "Price",
-          "DisplayName": "Price",
-          "Description": "The price of the invoice",
-          "Type":{
-            "Name": "uint"
-          }
-        },
-        {
-          "Name": "VAT",
-          "DisplayName": "VAT", 
-          "Description": "The vat of the invoice",
-          "Type":{
-            "Name": "uint"
-          }
-        }, 
-        {
-          "Name": "newPrice",
-          "DisplayName": "newPrice",
-          "Description": "The suggested new price of the invoice",
-          "Type": {
-            "Name": "uint"
-          }
-        },
-        {
-          "Name": "newVAT", 
-          "DisplayName": "newVAT",
-          "Description": "The suggested new VAT of the invoice",
-          "Type":{
-            "Name": "uint"
-          }
-        },
-        {
-          "Name": "Negotiater",
-          "DisplayName": "Negotiater",
-          "Description": "The one suggesting new information of the invoice",
-          "Type": {
-            "Name": "address"
           }
         }
       ],
       "Constructor": {
         "Parameters": [
           {
-            "Name": "_receiver",
-            "DisplayName": "Receiver",
-            "Type":{
-              "Name": "Receiver"
-            }
-          },
-          {
-            "Name": "_auditor",
-            "DisplayName": "Auditor",
+            "Name": "receiver",
+            "DisplayName": "Modtager",
             "Type": {
-              "Name": "Auditor"
+              "Name": "address"
             }
           },
           {
-            "Name": "_price",
-            "DisplayName": "Price no VAT", 
-            "Type":{
-              "Name": "uint"
+            "Name": "receiverBank",
+            "DisplayName": "Modtagers bank",
+            "Type": {
+              "Name": "address"
             }
           },
           {
-            "Name": "_vat",
-            "DisplayName": "VAT",
-            "Type":{
-              "Name": "uint"
+            "Name": "invoicersAuditor",
+            "DisplayName": "Revisor",
+            "Type": {
+              "Name": "address"
+            }
+          },
+          {
+            "Name": "filepath",
+            "DisplayName": "Filsti",
+            "Type": {
+              "Name": "string"
+            }
+          },
+          {
+            "Name": "price",
+            "DisplayName": "Pris ex. moms",
+            "Type": {
+              "Name": "int"
+            }
+          },
+          {
+            "Name": "vat",
+            "DisplayName": "Moms",
+            "Type": {
+              "Name": "int"
             }
           }
         ]
       },
       "Functions": [
         {
-          "Name": "Review",
-          "DisplayName": "Review",
-          "Description": "Review the invoice",
+          "Name": "AuditOk",
+          "DisplayName": "Revision OK",
+          "Description": "Audit of transaction - result = passed",
+          "Parameters": []
+        },
+        {
+          "Name": "AuditFail",
+          "DisplayName": "Revision fejl",
+          "Description": "Audit of transaction - result = fail",
           "Parameters": [
             {
-              "Name": "passed",
-              "DisplayName": "passed",
-              "Type":{
-                "Name": "bool"
+              "Name": "_comment",
+              "DisplayName": "Kommentar",
+              "Type": {
+                "Name": "string"
               }
             }
           ]
         },
         {
           "Name": "Negotiate",
-          "DisplayName": "Negotiate",
-          "Description": "Suggest new price and VAT of an invoice",
+          "DisplayName": "Forhandl",
+          "Description": "Foreslå ny pris",
           "Parameters": [
             {
+              "Name": "_filePath",
+              "DisplayName": "Filsti",
+              "Type": {
+                "Name": "string"
+              }
+            },
+            {
               "Name": "_price",
-              "DisplayName": "Price",
-              "Type":{
-                "Name": "uint"
+              "DisplayName": "Pris",
+              "Type": {
+                "Name": "int"
               }
             },
             {
               "Name": "_vat",
-              "DisplayName": "VAT",
-              "Type":{
-                "Name": "uint"
+              "DisplayName": "Moms",
+              "Type": {
+                "Name": "int"
+              }
+            },
+            {
+              "Name": "_comment",
+              "DisplayName": "Kommentar",
+              "Type": {
+                "Name": "string"
               }
             }
           ]
         },
         {
           "Name": "AcceptNegotiation",
-          "DisplayName": "AcceptNegotiation",
-          "Description": "Accept the suggested values",
+          "DisplayName": "Accepter fakturaændring",
+          "Description": "Accepter the suggested values",
           "Parameters": []
         },
         {
-          "Name": "RequestNegotiationEnd",
-          "DisplayName": "RequestNegotiationEnd",
-          "Description": "Request that the invoice is finalized",
-          "Parameters": []
-        },
-        {
-          "Name": "AcceptNegotiationEnd",
-          "DisplayName": "AcceptNegotiationEnd",
-          "Description": "Accept the finalize request",
-          "Parameters": []
-        },
-        {
-          "Name": "SendPayment",
-          "DisplayName": "SendPayment",
-          "Description": "Tell the invoicer that you have sent the money",
+          "Name": "AcceptInvoice",
+          "DisplayName": "Godkend faktura",
+          "Description": "Accept the invoice at the current state",
           "Parameters": []
         },
         {
           "Name": "AcceptPayment",
-          "DisplayName": "AcceptPayment",
+          "DisplayName": "Accepter betaling",
           "Description": "Accept the receivers money",
           "Parameters": []
         },
         {
           "Name": "CancelDeal",
-          "DisplayName": "CancelDeal",
+          "DisplayName": "Afvis handel",
           "Description": "Reject the invoice",
-          "Parameters": []
+          "Parameters": [
+            {
+              "Name": "_comment",
+              "DisplayName": "Kommentar",
+              "Type": {
+                "Name": "string"
+              }
+            }
+          ]
         }
       ],
       "States": [
         {
           "Name": "Created",
-          "DisplayName": "Created", 
-          "Description": "The invoice was just created",
-          "PercentComplete": 0,
-          "Value": 0,
+          "DisplayName": "Faktura oprettet",
+          "Description": "Fakturaen er oprettet",
+          "PercentComplete": 25,
           "Style": "Success",
           "Transitions": [
             {
               "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Cancel the deal",
-              "Function": "CancelDeal", 
-              "NextStates": ["Cancelled"],
-              "DisplayName": "Reject the invoice"
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Afvis fakturaen",
+              "Function": "CancelDeal",
+              "NextStates": [
+                "Cancelled"
+              ],
+              "DisplayName": "Afvis fakturaen"
             },
             {
               "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Negotiate the deal",
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Forhandl fakturaen",
               "Function": "Negotiate",
-              "NextStates": ["IsNegotiating"],
-              "DisplayName": "Negotiate"
+              "NextStates": [
+                "IsNegotiating"
+              ],
+              "DisplayName": "Forhandl"
             },
             {
               "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "The Receiver send funds to the the invoicer",
-              "Function": "SendPayment",
-              "NextStates": ["Paid"],
-              "DisplayName": "SendPayment"
+              "AllowedInstanceRoles": [
+                "Receiver"
+              ],
+              "Description": "Modtageren sender penge til afsenderen",
+              "Function": "AcceptInvoice",
+              "NextStates": [
+                "InvoiceAccepted"
+              ],
+              "DisplayName": "Accepter faktura"
             }
           ]
         },
         {
           "Name": "CanBeNegotiated",
-          "DisplayName": "CanBeNegotiated",
-          "Description": "The invoice can be negotiated",
-          "PercentComplete": 10,
-          "Value": 1,
-          "Style": "Success",
-          "Transitions":[
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Negotiate",
-              "Function": "Negotiate",
-              "NextStates": ["IsNegotiating"],
-              "DisplayName": "Negotiate"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Cancel the deal",
-              "Function": "CancelDeal", 
-              "NextStates": ["Cancelled"],
-              "DisplayName": "Reject the invoice"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "RequestNegotiationEnd",
-              "Function": "RequestNegotiationEnd",
-              "NextStates": ["RequestNegotiationEnd"],
-              "DisplayName": "RequestNegotiationEnd"
-            }
-          ]
-        },
-        {
-          "Name": "IsNegotiating", 
-          "DisplayName": "IsNegotiating",
-          "Description": "The invoice is in negotiation",
-          "PercentComplete": 10,
-          "Value": 2,
-          "Style": "Success",
-          "Transitions": [
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "AcceptNegotiation",
-              "Function": "AcceptNegotiation",
-              "NextStates": ["CanBeNegotiated"],
-              "DisplayName": "AcceptNegotiation"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Negotiate",
-              "Function": "Negotiate",
-              "NextStates": ["IsNegotiating"],
-              "DisplayName": "Negotiate"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Cancel the deal",
-              "Function": "CancelDeal", 
-              "NextStates": ["Cancelled"],
-              "DisplayName": "Reject the invoice"
-            }
-          ]
-        },
-        {
-          "Name": "NegotiationEndRequested",
-          "DisplayName": "NegotiationEndRequested",
-          "Description": "NegotiationEndRequested",
-          "PercentComplete": 25,
-          "Value": 3,
-          "Style": "Success",
-          "Transitions": [
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Cancel the deal",
-              "Function": "CancelDeal", 
-              "NextStates": ["Cancelled"],
-              "DisplayName": "Reject the invoice"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "AcceptNegotiationEnd", 
-              "Function": "AcceptNegotiationEnd",
-              "NextStates": ["NegotiationFinished"]
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Negotiate",
-              "Function": "Negotiate",
-              "NextStates": ["IsNegotiating"],
-              "DisplayName": "Negotiate"
-            }
-          ]
-        },
-        {
-          "Name": "NegotiationFinished",
-          "DisplayName": "NegotiationFinished",
-          "Description": "The negotiation stage of the invoice is finished",
+          "DisplayName": "Fakturaændring godkendt",
+          "Description": "Fakturaen kan forhandles",
           "PercentComplete": 50,
-          "Value": 4,
-          "Style": "Success", 
-          "Transitions": [
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Invoicer", "Receiver"],
-              "Description": "Cancel the deal",
-              "Function": "CancelDeal", 
-              "NextStates": ["Cancelled"],
-              "DisplayName": "Reject the invoice"
-            },
-            {
-              "AllowedRoles": [],
-              "AllowedInstanceRoles": ["Receiver"],
-              "Description": "The Receiver send funds to the the invoicer",
-              "Function": "SendPayment",
-              "NextStates": ["Paid"],
-              "DisplayName": "SendPayment"
-            }
-          ]
-        },
-        {
-          "Name": "PaymentSent", 
-          "DisplayName": "PaymentSent",
-          "Description": "The receiver has send funds to the invoicer",
-          "PercentComplete": 75,
-          "Value": 5,
           "Style": "Success",
           "Transitions": [
             {
               "AllowedRoles": [],
-              "AllowedInstanceRoles":["Invoicer"],
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Forhandl",
+              "Function": "Negotiate",
+              "NextStates": [
+                "IsNegotiating"
+              ],
+              "DisplayName": "Forhandl"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Afvis fakturaen",
+              "Function": "CancelDeal",
+              "NextStates": [
+                "Cancelled"
+              ],
+              "DisplayName": "Afvis faktura"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Receiver"
+              ],
+              "Description": "Modtageren sender penge til afsenderen",
+              "Function": "AcceptInvoice",
+              "NextStates": [
+                "InvoiceAccepted"
+              ],
+              "DisplayName": "Accepter faktura"
+            }
+          ]
+        },
+        {
+          "Name": "IsNegotiating",
+          "DisplayName": "Faktura forhandles",
+          "Description": "Fakturaen er i forhandling",
+          "PercentComplete": 35,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Accepter forhandling",
+              "Function": "AcceptNegotiation",
+              "NextStates": [
+                "CanBeNegotiated"
+              ],
+              "DisplayName": "Accepter forhandling"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Negotiate",
+              "Function": "Negotiate",
+              "NextStates": [
+                "IsNegotiating"
+              ],
+              "DisplayName": "Forhandl"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Invoicer",
+                "Receiver"
+              ],
+              "Description": "Cancel the deal",
+              "Function": "CancelDeal",
+              "NextStates": [
+                "Cancelled"
+              ],
+              "DisplayName": "Afvis faktura"
+            }
+          ]
+        },
+        {
+          "Name": "InvoiceAccepted",
+          "DisplayName": "Faktura godkendt",
+          "Description": "Modtageren acceptere faktura",
+          "PercentComplete": 75,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "ReceiverBank"
+              ],
               "Description": "The invoice accepts to have received the funds",
               "Function": "AcceptPayment",
-              "NextStates": ["Paid"],
-              "DisplayName": "AcceptPayment"
+              "NextStates": [
+                "Paid"
+              ],
+              "DisplayName": "Accepter betaling"
             }
           ]
         },
         {
           "Name": "Paid",
-          "DisplayName": "Paid",
+          "DisplayName": "Betalt",
           "Description": "The invoicer accepts to have received the funds.",
           "PercentComplete": 80,
-          "Value": 6,
           "Style": "Success",
           "Transitions": [
             {
-              "AllowedRoles":[],
-              "AllowedInstanceRoles":["Auditor"],
-              "Description": "The auditor reviews the invoice",
-              "Function": "Review",
-              "NextStates": ["Passed", "Failed"],
-              "DisplayName": "Review"
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Auditor"
+              ],
+              "Description": "Audit of transaction - result = passed",
+              "Function": "AuditOk",
+              "NextStates": [
+                "Passed"
+              ],
+              "DisplayName": "Revision OK"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [
+                "Auditor"
+              ],
+              "Description": "Audit of transaction - result = fail",
+              "Function": "AuditFail",
+              "NextStates": [
+                "Failed"
+              ],
+              "DisplayName": "Revision fejl"
             }
-          ]          
+          ]
         },
         {
           "Name": "Cancelled",
-          "DisplayName": "Cancelled",
-          "Description": "The deal is cancelled",
+          "DisplayName": "Annulleret",
+          "Description": "Handlen er annulleret",
           "PercentComplete": 100,
-          "Value": 7,
           "Style": "Failure",
           "Transitions": []
         },
         {
-          "Name": "Failed", 
-          "DisplayName": "Failed",
-          "Description": "The invoice is found insufficient by the auditor",
+          "Name": "Failed",
+          "DisplayName": "Revision afvist",
+          "Description": "Fakturaen er ikke fyldestgørende",
           "PercentComplete": 100,
-          "Value": 8,
           "Style": "Failure",
-          "Transitions":[]
+          "Transitions": []
+        },
+        {
+          "Name": "Passed",
+          "DisplayName": "Revision godkendt",
+          "Description": "Fakturaen er ikke fyldestgørende",
+          "PercentComplete": 100,
+          "Style": "Success",
+          "Transitions": []
         }
       ]
     }
