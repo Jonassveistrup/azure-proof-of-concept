@@ -1,131 +1,137 @@
 pragma solidity ^0.4.20;
 
-contract AppBuilderBase {
-	event AppBuilderContractCreated(string contractType, address originatingAddress);
-	event AppBuilderContractUpdated(string contractType, string action, address originatingAddress);
+contract WorkbenchBase {
+	event WorkbenchContractCreated(string applicationName, string workflowName, address originatingAddress);
+	event WorkbenchContractUpdated(string applicationName, string workflowName, string action, address originatingAddress);
 
-	string internal ContractType;
+	string internal ApplicationName;
+	string internal WorkflowName;
 
-	function AppBuilderBase(string contractType) internal {
-		ContractType = contractType;
+	function WorkbenchBase(string applicationName, string workflowName) internal {
+		ApplicationName = applicationName;
+		WorkflowName = workflowName;
 	}
 
 	function ContractCreated() internal {
-		AppBuilderContractCreated(ContractType, msg.sender);
+		WorkbenchContractCreated(ApplicationName, WorkflowName, msg.sender);
 	}
 
 	function ContractUpdated(string action) internal {
-		AppBuilderContractUpdated(ContractType, action, msg.sender);
+		WorkbenchContractUpdated(ApplicationName, WorkflowName, action, msg.sender);
 	}
 }
 
-contract Dfakturering is AppBuilderBase("Dfakturering") {
+contract Dfakturering_v14 is WorkbenchBase("Dfakturering_v14","Dfakturering_v14") {
 
-	enum ContractStates { Created, CanBeNegotiated, IsNegotiating, NegotiationEndRequested, NegotiationFinished, PaymentSent, Paid, Cancelled, Failed, Passed }
+	enum StateType {Created, CanBeNegotiated, IsNegotiating, InvoiceAccepted, Paid, Cancelled, Failed, Passed}
+	StateType public State;			// The state of the Invoice
+	address public Invoicer; 	   	// Product seller
+	address public Receiver;    	// Receiver of invoice
+	address public Auditor;    		// Auditorname of Seller
+	address public Negotiator;    	// The suggester
+	address public ReceiverBank;    // The bank of the receiver
 
-	ContractStates public State;    // Invoice state
-	address public Invoicer;    // Product seller
-	address public Receiver;    // Receiver of invoice
-	address public Auditor;    // Auditorname of Seller
-	address public Negotiater;    // The suggester
+	string public Comment;
 
-	uint public Price;    // Price in currency
-	uint public VAT;    // VAT percentage (25%)
-	
-	uint public NewPrice;    // New suggested price
-	uint public NewVAT;    // New suggested VAT
-	
-	function Dfakturering(address receiver, address invoicersAuditor, uint price, uint vAT) {
+	string public FilePath; 		// The path of the file
+	bytes32 public FileHash; 		// Not a real filehash, just the hash of the filepath
+	int public Price;    			// Price in currency
+	int public VAT;    				// VAT percentage (25%)
+
+	int public NewPrice;    		// New suggested price
+	int public NewVAT;    			// New suggested VAT
+	string public NewFilePath; 		// New suggested filepath
+
+
+	// Constructor. -> this function is refered to as CreateInvoice in the sequence diagram
+	function Dfakturering_v14(address receiver, address receiverBank, address invoicersAuditor, string filepath, int price, int vat) public {
+		State = StateType.Created;
+
 		Invoicer = msg.sender;
-		State = ContractStates.Created;
 		Receiver = receiver;
 		Auditor = invoicersAuditor;
-		Price = price;
-		VAT = vAT;
+		ReceiverBank = receiverBank;
 
+		FilePath = filepath;
+		FileHash = keccak256(bytes(filepath));
+
+		Price = price;
+		VAT = vat;
 		ContractCreated();
 	}
-	function Review(bool passed) public {
-		require(msg.sender == Auditor && State == ContractStates.Paid);
-		
-		State = passed ? ContractStates.Passed : ContractStates.Failed;		
 
-		ContractUpdated("Review");
+	function AuditOk() public {
+		require(msg.sender == Auditor && State == StateType.Paid);
+		State = StateType.Passed;
+		ContractUpdated("AuditOk");
 	}
 
-	function Negotiate(uint _price, uint _vat) public {
-	    require(State == ContractStates.CanBeNegotiated || State == ContractStates.NegotiationEndRequested || State == ContractStates.IsNegotiating || State == ContractStates.Created);
-	    require(msg.sender == Receiver || msg.sender == Invoicer);
-	
-	    Negotiater = msg.sender;
-	    NewVAT = _vat;
-	    NewPrice = _price;
+	function AuditFail(string _comment) public {
+		require(msg.sender == Auditor && State == StateType.Paid);
+		State = StateType.Failed;
+		Comment = _comment;
+		ContractUpdated("AuditFail");
+	}
 
-	    State = ContractStates.IsNegotiating;
-	
-		ContractUpdated("Negotiate");	
+	function Negotiate(string _filePath, int _price, int _vat, string _comment) public {
+		require(State == StateType.CanBeNegotiated || State == StateType.IsNegotiating || State == StateType.Created);
+		require(msg.sender == Receiver || msg.sender == Invoicer);
+
+		Negotiator = msg.sender;
+		NewVAT = _vat;
+		NewPrice = _price;
+
+		NewFilePath = _filePath;
+
+		State = StateType.IsNegotiating;
+		Comment = _comment;
+
+		ContractUpdated("Negotiate");
 	}
 
 	function AcceptNegotiation() public {
-		require(State == ContractStates.IsNegotiating);
+		require(State == StateType.IsNegotiating);
 		require(msg.sender == Receiver || msg.sender == Invoicer);
-		require(msg.sender != Negotiater);
+		require(msg.sender != Negotiator);
 
 		Price = NewPrice;
 		VAT = NewVAT;
+		FilePath = NewFilePath;
+		FileHash = keccak256(bytes(NewFilePath));
 
 		NewPrice = 0;
 		NewVAT = 0;
-		Negotiater = 0;
+		Negotiator = 0;
+		NewFilePath = "";
 
-		State = ContractStates.CanBeNegotiated;
+		State = StateType.CanBeNegotiated;
 
 		ContractUpdated("AcceptNegotiation");
 	}
 
-	function RequestNegotiationEnd() public{
-		require(State == ContractStates.CanBeNegotiated);
-		require(msg.sender == Receiver || msg.sender == Invoicer);
-		require(Negotiater == address(0));
-
-		Negotiater = msg.sender;
-		State = ContractStates.NegotiationEndRequested;
-
-		ContractUpdated("RequestNegotiationEnd");
-	}
-
-	function AcceptNegotiationEnd() public{
-		require(State == ContractStates.NegotiationEndRequested);
-		require(msg.sender == Receiver || msg.sender == Invoicer);
-		require(Negotiater != msg.sender);
-
-		State = ContractStates.NegotiationFinished;
-
-		ContractUpdated("AcceptNegotiationEnd");
-	}
-
-	function SendPayment() public{
-		require(State == ContractStates.NegotiationFinished || State == ContractStates.Created);
+	function AcceptInvoice() public{
+		require(State == StateType.CanBeNegotiated || State == StateType.Created);
 		require(msg.sender == Receiver);
 
-		State = ContractStates.PaymentSent;
-
-		ContractUpdated("SendPayment");
+		State = StateType.InvoiceAccepted;
+		ContractUpdated("InvoiceAccepted");
 	}
 
+	//This function illustrates how seller's bank can initiate the split payment between seller (price) and the authorities (VAT).
 	function AcceptPayment() public{
-		require(msg.sender == Invoicer && State == ContractStates.PaymentSent);
+		require(msg.sender == ReceiverBank && State == StateType.InvoiceAccepted);
 
-		State = ContractStates.Paid;
+		State = StateType.Paid;
 
 		ContractUpdated("AcceptPayment");
 	}
 
-	function CancelDeal() public{
-		require(State == ContractStates.CanBeNegotiated || State == ContractStates.NegotiationEndRequested || State == ContractStates.IsNegotiating || State == ContractStates.Created);
+	function CancelDeal(string _comment) public{
+		require(State == StateType.CanBeNegotiated || State == StateType.IsNegotiating || State == StateType.Created);
 		require(msg.sender == Receiver || msg.sender == Invoicer);
 
-		State = ContractStates.Cancelled;
+		State = StateType.Cancelled;
+		Comment = _comment;
 
 		ContractUpdated("CancelDeal");
 	}
