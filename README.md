@@ -9,8 +9,8 @@ This section provides an overview of Azure Blockchain Workbench solution archite
 ## Solution architecture
 Fig. 9 shows the three logical areas of the architecture: 1) the DLT and data storage types; 2) web, app and smart contracts; and 3) user and key management. The architecture fits with the proposed generic model presented by Xu et al. (2019) whereas the architecture presented by Glaser (2017) does not articulate what Xu et al. (2019) refer to as auxiliary databases. Understanding the context and not only focusing on the DLT component are critical when deploying blockchain technology in an enterprise setting.
 
-![](images/solutionarch.png)
-Fig. 9. Solutions architecture
+![](Solution_architecture.png)
+Fig. 1. Solutions architecture
 
 ### Web, app and smart contracts
 The artifact is, as described in the paper, a prototype. However, a key advantage of the Azure Blockchain Workbench lies in its built-in web application for quick demonstration purposes. This logical area has five subcomponents: user administration; web, app, business reporting; and smart contracts. The user administration module affords users from the Azure Active Directory access to a given role within the application. For example, an external auditor from an accounting firm can be appointed a user of the platform and thus receive necessary access rights to fulfil this role for a given client. I recommend that the validating nodes share governance responsibility of user administration. The web application corresponds to a regular website that users can access via a browser on any device. During the development of the prototype, I used the premade web application and made sure that time spent on development was dedicated to smart contracts. The segregation of the API-based frontend and smart contract code minimizes switching costs when the solution must be directly integrated with an ERP system or other endpoints. 
