@@ -7,7 +7,7 @@ In order for the code to work, deploy it inside Azure Blockchain Workbench (http
 This section provides an overview of Azure Blockchain Workbench solution architecture and a description of the main components.
 
 ## Solution architecture
-Fig. 9 shows the three logical areas of the architecture: 1) the DLT and data storage types; 2) web, app and smart contracts; and 3) user and key management. The architecture fits with the proposed generic model presented by Xu et al. (2019) whereas the architecture presented by Glaser (2017) does not articulate what Xu et al. (2019) refer to as auxiliary databases. Understanding the context and not only focusing on the DLT component are critical when deploying blockchain technology in an enterprise setting.
+Fig. 1 shows the three logical areas of the architecture: 1) the DLT and data storage types; 2) web, app and smart contracts; and 3) user and key management. The architecture fits with the proposed generic model presented by Xu et al. (2019) whereas the architecture presented by Glaser (2017) does not articulate what Xu et al. (2019) refer to as auxiliary databases. Understanding the context and not only focusing on the DLT component are critical when deploying blockchain technology in an enterprise setting.
 
 ![](Solution_architecture.png)
 Fig. 1. Solutions architecture
